@@ -16,13 +16,13 @@ A new internal **Support Operations Platform** has been deployed to assist IT 
 
 ## 1.1 [Nmap](Nmap.md) Scan
 ran `nmap -sV -sC -oN scan.nmap TARGET_IP` to discover open ports
-![[nmap-scan.png]]
+![nmap-scan.png](screenshots/nmap-scan.png)
 The scan identified two open ports:
 - TCP/22 - SSH
 - TCP/80 - HTTP
 
 Browsing to the HTTP service presented a login page.
-![[Pasted image 20260807122955.png]]
+![login.png](screenshots/login.png)
 I tested common SQL injection authentication bypass payloads such as:
 `' OR 1=1;--` and: `admin@support.thm'--`
 but none succeeded, suggesting the login form was not vulnerable to a simple SQL injection bypass.
@@ -32,7 +32,7 @@ To discover hidden files and directories, I performed directory enumeration usin
 gobuster dir -u http://10.113.166.52/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt -t 50 -x php,html,txt,bak,js
 ```
 
-![[Pasted image 20260807123401.png]]
+![gobuster.png](screenshots/gobuster.png)
 
 ## 1.3 Mapping Application Structure
 ```text
@@ -66,30 +66,30 @@ Before authentication, none of the discovered files exposed sensitive informatio
 2. The login page explicitly displayed the helpdesk email address: `help@support.thm`. Since the username was known, only the password needed to be brute-forced.
 3. Use ffuf to fuzz the password 
 
-![[Pasted image 20260807135448.png]]
+![login error.png](screenshots/login%20error.png)
 
-![[Pasted image 20260807135822.png]]
+![ffuf login.png](screenshots/ffuf%20login.png)
 
 ---
 # 3. Initial Access
 After authentication, a new value appeared in browser storage:
 `isITUser: 68934a3e9455fa72420237eb05902327`
 The value resembled an MD5 hash, so I submitted it to [CrackStation](https://crackstation.net/).
-![[Pasted image 20260807140449.png]]
+![crackstation.png](screenshots/crackstation.png)
 
 Since the cookie represented the MD5 hash of `false`, I generated the MD5 hash of `true` and replaced the cookie value.
 ![[Pasted image 20260807140655.png]]
 
 # 4. BOLA/IDOR
 After replacing the cookie, I'm presented with an API endpoint `http://10.113.166.52/user/3`
-![[Pasted image 20260807141018.png]]
+![BOLA.png](screenshots/BOLA.png)
 
 When I change '3' to '1', I get the admin's email
-![[Pasted image 20260807142801.png]]
+![admin email.png](screenshots/admin%20email.png)
 The API did not perform authorization checks to verify whether the requesting user was allowed to access another user's information.
 # 5. Local File Inclusion (LFI)
 Visiting the home page presents a dropdown menu to select a theme, and it's reflected in the URL
-![[Pasted image 20260807143020.png]]
+![lfi endpoint.png](screenshots/lfi%20endpoint.png)
 The dashboard allowed users to select a visual theme through the `skin` parameter. For example: `dashboard.php?skin=red`. 
 
 During enumeration, I had already discovered the following file: `skins/red.php` 
@@ -103,22 +103,22 @@ include("skins/" . $_GET['skin'] . ".php");
 
 Testing path traversal: `dashboard.php?skin=../config`
 This caused the application to include: `config.php`, which exposed admin password
-![[Pasted image 20260807144216.png]]
+![admin password.png](screenshots/admin%20password.png)
 
 ---
 # Command Injection
 Upon using the admin's credentials, I find the admin flag. 
 After authenticating as the administrator, additional functionality became available. One feature allowed the administrator to retrieve the system date and time.
-![[Pasted image 20260807155802.png]]
+![command injection endpoint.png](screenshots/command%20injection%20endpoint.png)
 
 Upon viewing the page source, I notice this sends a POST request
-![[Pasted image 20260807155947.png]]
+![command injection request.png](screenshots/command%20injection%20request.png)
 Inspecting the request revealed a parameter named `sys`, suggesting the backend executed system-level commands based on user input.
 
 Intercepting a response and modifying it using burp suite:
-![[Pasted image 20260807160322.png]]
+![intercepting command injection request.png](screenshots/intercepting%20command%20injection%20request.png)
 so we bypass by running `date` and then we end the command using a `;` to terminate the date command and then inject the `cat` command: 
-![[Pasted image 20260807160415.png]]
+![OffSec/Write ups/tryhackme/Support/screenshots/admin flag.png](OffSec/Write%20ups/tryhackme/Support/screenshots/admin%20flag.png)
 
 # Lessons Learned
 

