@@ -6,7 +6,7 @@ This repository contains my write-ups, notes, and documentation from various cyb
 
 - TryHackMe (current)
 - Hack The Box (upcoming)
-- PortSwigger Web Security Academy (planned)
+- PortSwigger Web Security Academy (upcoming)
 
 ## Repository Structure
 
