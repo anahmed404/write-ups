@@ -16,7 +16,7 @@ A new internal **Support Operations Platform** has been deployed to assist IT 
 
 ## 1.1 [Nmap](Nmap.md) Scan
 ran `nmap -sV -sC -oN scan.nmap TARGET_IP` to discover open ports
-![nmap-scan.png](screenshots/nmap-scan.png)
+![nmap-scan.png](OffSec/Write%20ups/tryhackme/Support/screenshots/nmap-scan.png)
 The scan identified two open ports:
 - TCP/22 - SSH
 - TCP/80 - HTTP
