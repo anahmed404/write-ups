@@ -1,4 +1,4 @@
-
+room urL: https://tryhackme.com/room/jump
 # Overview
 
 **Jump** is a Linux privilege-escalation challenge built around chaining several smaller weaknesses together.
@@ -25,10 +25,10 @@ root
 ## FTP Enumeration
 
 Nmap revealed an FTP service. I connected to it anonymously: 
-![OffSec/Write ups/tryhackme/Jump/screenshots/nmap-scan.png](OffSec/Write%20ups/tryhackme/Jump/screenshots/nmap-scan.png)
+![nmap-scan.png](screenshots/nmap-scan.png)
 
 The FTP server exposed two directories:
-![ftp directories.png](ftp%20directories.png)
+![ftp directories.png](screenshots/ftp%20directories.png)
 
 `incoming/` was initially empty, while `pub/` contained several files. One of them was `README.txt`:
 ```

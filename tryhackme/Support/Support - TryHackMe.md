@@ -16,7 +16,7 @@ A new internal **Support Operations Platform** has been deployed to assist IT 
 
 ## 1.1 [Nmap](Nmap.md) Scan
 ran `nmap -sV -sC -oN scan.nmap TARGET_IP` to discover open ports
-![nmap-scan.png](OffSec/Write%20ups/tryhackme/Support/screenshots/nmap-scan.png)
+![nmap-scan.png](screenshots/nmap-scan.png)
 The scan identified two open ports:
 - TCP/22 - SSH
 - TCP/80 - HTTP
@@ -118,7 +118,7 @@ Inspecting the request revealed a parameter named `sys`, suggesting the backend 
 Intercepting a response and modifying it using burp suite:
 ![intercepting command injection request.png](screenshots/intercepting%20command%20injection%20request.png)
 so we bypass by running `date` and then we end the command using a `;` to terminate the date command and then inject the `cat` command: 
-![OffSec/Write ups/tryhackme/Support/screenshots/admin flag.png](OffSec/Write%20ups/tryhackme/Support/screenshots/admin%20flag.png)
+![admin flag.png](screenshots/admin%20flag.png)
 
 # Lessons Learned
 
