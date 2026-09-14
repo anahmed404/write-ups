@@ -22,12 +22,14 @@ Open ports: ssh at 22, DNS at 53, http at 80
 Visiting `http://TARGET_IP` presents a login page. There's a footer including a link to an API page. It reveals the endpoint 
 `/file.php?cv=\<URL>`. This endpoint accepts a URL-like parameter and is a potential candidate for testing [[File Inclusion]] and [[SSRF]].
 ![Login form.png](Screenshots/Login%20form.png)
+
 Basic authentication bypass payloads such as `' OR 1=1--` and `admin'--` did not succeed, suggesting the login form was not vulnerable to [[SQLi]].
 ## 1.2 [[Gobuster]] Directory Enumeration
 run `gobuster dir -u http://TARGET_IP -w /usr/share/wordlists/seclists/Discovery/Web-Content/common.txt -t 50 -x php,html,txt,bak,js`
 ![gobuster-scan.png](Screenshots/gobuster-scan.png)
 ## 1.3 sitemap enumeration
 visit http://TARGET_IP/sitemap.xml
+
 ![sitemap1.png](Screenshots/sitemap1.png)
 ![sitemap2.png](Screenshots/sitemap2.png)
 
