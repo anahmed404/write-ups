@@ -16,7 +16,7 @@ room url: https://tryhackme.com/room/recruitwebchallenge
 # 1. Recon and Enumeration
 ## 1.1 [[Nmap]] Scan:
 run `nmap -sV -sC TARGET_IP` to discover open ports
-![nmap scan.png](Screenshots/nmap%20scan.png)
+![nmap scan.png](OffSec/Write%20ups/tryhackme/Recruit/Screenshots/nmap%20scan.png)
 Open ports: ssh at 22, DNS at 53, http at 80
 
 Visiting `http://TARGET_IP` presents a login page. There's a footer including a link to an API page. It reveals the endpoint 
