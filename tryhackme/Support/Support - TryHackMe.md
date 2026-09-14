@@ -17,6 +17,7 @@ A new internal **Support Operations Platform** has been deployed to assist IT 
 ## 1.1 [Nmap](Nmap.md) Scan
 ran `nmap -sV -sC -oN scan.nmap TARGET_IP` to discover open ports
 ![nmap-scan.png](screenshots/nmap-scan.png)
+
 The scan identified two open ports:
 - TCP/22 - SSH
 - TCP/80 - HTTP
@@ -85,7 +86,9 @@ After replacing the cookie, I'm presented with an API endpoint `http://10.113.16
 ![BOLA.png](screenshots/BOLA.png)
 
 When I change '3' to '1', I get the admin's email
+
 ![admin email.png](screenshots/admin%20email.png)
+
 The API did not perform authorization checks to verify whether the requesting user was allowed to access another user's information.
 # 5. Local File Inclusion (LFI)
 Visiting the home page presents a dropdown menu to select a theme, and it's reflected in the URL
