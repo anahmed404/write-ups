@@ -5,6 +5,7 @@ This repository contains my write-ups, notes, and documentation from various cyb
 ## Platforms
 
 - TryHackMe (current)
+- ROP Emporium (current)
 - Hack The Box (upcoming)
 - PortSwigger Web Security Academy (upcoming)
 
@@ -13,8 +14,7 @@ This repository contains my write-ups, notes, and documentation from various cyb
 ```
 .
 ├── tryhackme/
-├── hackthebox/
-└── portswigger/
+└── ROP Emporium/
 ```
 
 Each directory contains individual write-ups, screenshots (where appropriate), and supporting files.
