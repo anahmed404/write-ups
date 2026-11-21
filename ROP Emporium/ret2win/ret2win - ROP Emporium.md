@@ -308,7 +308,21 @@ The payload now contains:
 The exploit successfully redirects execution to `ret2win`, executes `system("/bin/cat flag.txt")`, and prints the flag.
 
 ---
-# 8. Key Takeaways
+
+# 8. Possible Mitigations
+
+The most direct fix: Prevent the buffer overflow in the first place by ensuring that `read()` never writes more bytes than the destination buffer can hold.
+
+Several security mechanisms could prevent or make this exploit more difficult:
+
+- Stack Canaries: A canary value is placed between local stack variables and control data. If a buffer overflow overwrites it, the program detects the corruption before returning and terminates execution.
+
+- ASLR: Randomizes memory addresses, making it harder to predict where useful code and data are located.
+
+- PIE: Allows the main executable to be loaded at randomized addresses, complementing ASLR. Without PIE, the executable's code addresses remain fixed, making the `ret2win` function's address predictable.
+
+---
+# 9. Key Takeaways
 
 - **Stack frame layout:** Understanding the relationship between the local buffer, saved RBP, and return address is essential when calculating overflow offsets.
 - **Cyclic patterns:** Useful for identifying the exact offset needed to overwrite the saved return address.
